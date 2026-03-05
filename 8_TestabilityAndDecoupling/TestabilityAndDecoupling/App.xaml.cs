@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using TestabilityAndDecoupling.Services;
+using TestabilityAndDecoupling.Services.Interfaces;
 using TestabilityAndDecoupling.ViewModel;
 
 namespace TestabilityAndDecoupling;

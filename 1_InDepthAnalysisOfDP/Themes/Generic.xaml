@@ -1,0 +1,72 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cc="clr-namespace:InDepthAnalysisOfDP.CustomControls">
+
+
+    <Style TargetType="{x:Type cc:NumericUpDown}">
+        <Setter Property="Validation.ErrorTemplate">
+            <Setter.Value>
+                <ControlTemplate>
+                    <DockPanel>
+                        <Border
+                            BorderBrush="Red"
+                            BorderThickness="2"
+                            CornerRadius="4">
+                            <AdornedElementPlaceholder />
+                        </Border>
+                    </DockPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type cc:NumericUpDown}">
+                    <Border
+                        x:Name="Border"
+                        Background="White"
+                        BorderBrush="Gray"
+                        BorderThickness="1"
+                        CornerRadius="4">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="25" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox
+                                x:Name="PART_TextBox"
+                                Padding="5"
+                                VerticalContentAlignment="Center"
+                                Background="Transparent"
+                                BorderThickness="0" />
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Button
+                                    x:Name="PART_IncreaseButton"
+                                    Grid.Row="0"
+                                    Content="▲"
+                                    FontSize="10" />
+                                <Button
+                                    x:Name="PART_DecreaseButton"
+                                    Grid.Row="1"
+                                    Content="▼"
+                                    FontSize="10" />
+                            </Grid>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#4A90E2" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Border" Property="Opacity" Value="0.5" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

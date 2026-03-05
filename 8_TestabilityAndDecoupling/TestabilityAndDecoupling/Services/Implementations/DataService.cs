@@ -1,4 +1,6 @@
-﻿namespace TestabilityAndDecoupling.Services;
+﻿using TestabilityAndDecoupling.Services.Interfaces;
+
+namespace TestabilityAndDecoupling.Services;
 
 public class DataService : IDataService
 {

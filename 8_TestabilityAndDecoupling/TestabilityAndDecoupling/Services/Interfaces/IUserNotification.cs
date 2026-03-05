@@ -1,4 +1,4 @@
-﻿namespace TestabilityAndDecoupling.Services;
+﻿namespace TestabilityAndDecoupling.Services.Interfaces;
 
 public interface IUserNotification
 {

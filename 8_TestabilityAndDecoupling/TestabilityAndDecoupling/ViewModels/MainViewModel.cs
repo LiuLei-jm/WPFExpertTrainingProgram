@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using TestabilityAndDecoupling.Services;
+using TestabilityAndDecoupling.Services.Interfaces;
 
 namespace TestabilityAndDecoupling.ViewModel;
 

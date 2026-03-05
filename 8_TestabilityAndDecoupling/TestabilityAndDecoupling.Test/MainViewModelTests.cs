@@ -1,6 +1,6 @@
 using Moq;
 using System.Threading.Tasks;
-using TestabilityAndDecoupling.Services;
+using TestabilityAndDecoupling.Services.Interfaces;
 using TestabilityAndDecoupling.ViewModel;
 
 namespace TestabilityAndDecoupling.Test;
