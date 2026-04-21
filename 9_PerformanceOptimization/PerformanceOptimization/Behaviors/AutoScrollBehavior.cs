@@ -7,16 +7,19 @@ namespace PerformanceOptimization.Behaviors;
 
 public static class AutoScrollBehavior
 {
-    public static readonly DependencyProperty EnableProperty =
-        DependencyProperty.RegisterAttached(
-            "Enable",
-            typeof(bool),
-            typeof(AutoScrollBehavior),
-            new PropertyMetadata(false, OnEnableChanged)
-            );
+    public static readonly DependencyProperty EnableProperty = DependencyProperty.RegisterAttached(
+        "Enable",
+        typeof(bool),
+        typeof(AutoScrollBehavior),
+        new PropertyMetadata(false, OnEnableChanged)
+    );
 
-    public static void SetEnable(DependencyObject element, bool value) => element.SetValue(EnableProperty, value);
-    public static bool GetEnable(DependencyObject element) => (bool)element.GetValue(EnableProperty);
+    public static void SetEnable(DependencyObject element, bool value) =>
+        element.SetValue(EnableProperty, value);
+
+    public static bool GetEnable(DependencyObject element) =>
+        (bool)element.GetValue(EnableProperty);
+
     private static void OnEnableChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is ItemsControl itemsControl)
@@ -41,7 +44,8 @@ public static class AutoScrollBehavior
         }
 
         var scrollViewer = FindScrollViewer(itemsControl);
-        if (scrollViewer == null) return;
+        if (scrollViewer == null)
+            return;
         bool autoScroll = true;
 
         scrollViewer.ScrollChanged += (s, args) =>
@@ -53,18 +57,23 @@ public static class AutoScrollBehavior
         {
             collection.CollectionChanged += (s, args) =>
             {
-                if (!autoScroll) return;
-                itemsControl.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    scrollViewer.ScrollToEnd();
-                }), System.Windows.Threading.DispatcherPriority.Background);
+                if (!autoScroll)
+                    return;
+                itemsControl.Dispatcher.BeginInvoke(
+                    new Action(() =>
+                    {
+                        scrollViewer.ScrollToEnd();
+                    }),
+                    System.Windows.Threading.DispatcherPriority.Background
+                );
             };
         }
     }
 
     private static ScrollViewer FindScrollViewer(DependencyObject d)
     {
-        if (d is ScrollViewer sv) return sv;
+        if (d is ScrollViewer sv)
+            return sv;
         for (int i = 0; i < VisualTreeHelper.GetChildrenCount(d); i++)
         {
             var child = VisualTreeHelper.GetChild(d, i);
