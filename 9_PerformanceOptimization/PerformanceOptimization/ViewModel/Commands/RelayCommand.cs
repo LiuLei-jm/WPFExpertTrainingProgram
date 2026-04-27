@@ -8,7 +8,7 @@ public class RelayCommand : ICommand
     private readonly Func<bool>? _canExecute;
     public RelayCommand(Action execute, Func<bool>? canExecute = null)
     {
-        _execute = execute;
+        _execute = execute ?? throw new ArgumentNullException(nameof(execute));
         _canExecute = canExecute;
     }
     public event EventHandler? CanExecuteChanged;

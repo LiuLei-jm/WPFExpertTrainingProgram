@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace PerformanceOptimization.Behaviors;
 
@@ -13,6 +14,8 @@ public static class AutoScrollBehavior
         typeof(AutoScrollBehavior),
         new PropertyMetadata(false, OnEnableChanged)
     );
+    private static readonly DependencyProperty CollectionChangedHandlerProperty =
+        DependencyProperty.RegisterAttached("CollectionChangedHandler", typeof(NotifyCollectionChangedEventHandler), typeof(AutoScrollBehavior));
 
     public static void SetEnable(DependencyObject element, bool value) =>
         element.SetValue(EnableProperty, value);
@@ -27,10 +30,26 @@ public static class AutoScrollBehavior
             if ((bool)e.NewValue)
             {
                 itemsControl.Loaded += ItemsControl_Loaded;
+                itemsControl.Unloaded += ItemsControl_Unloaded;
             }
             else
             {
                 itemsControl.Loaded -= ItemsControl_Loaded;
+                itemsControl.Unloaded -= ItemsControl_Unloaded;
+            }
+        }
+    }
+
+    private static void ItemsControl_Unloaded(object sender, RoutedEventArgs e)
+    {
+        if (sender is not ItemsControl itemsControl) return;
+        if(itemsControl.ItemsSource is INotifyCollectionChanged collection)
+        {
+            var handler = (NotifyCollectionChangedEventHandler)itemsControl.GetValue(CollectionChangedHandlerProperty);
+            if(handler!= null)
+            {
+                collection.CollectionChanged -= handler;
+                itemsControl.ClearValue(CollectionChangedHandlerProperty);
             }
         }
     }
@@ -55,18 +74,16 @@ public static class AutoScrollBehavior
 
         if (itemsControl.ItemsSource is INotifyCollectionChanged collection)
         {
-            collection.CollectionChanged += (s, args) =>
+            NotifyCollectionChangedEventHandler handler = (s, args) =>
             {
-                if (!autoScroll)
-                    return;
+                if (!autoScroll) return;
                 itemsControl.Dispatcher.BeginInvoke(
-                    new Action(() =>
-                    {
-                        scrollViewer.ScrollToEnd();
-                    }),
-                    System.Windows.Threading.DispatcherPriority.Background
-                );
+                new Action(() => scrollViewer.ScrollToEnd()),
+                DispatcherPriority.Background   
+                    );
             };
+            collection.CollectionChanged += handler;
+            itemsControl.SetValue(CollectionChangedHandlerProperty, handler);
         }
     }
 

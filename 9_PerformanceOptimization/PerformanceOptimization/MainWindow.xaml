@@ -12,41 +12,109 @@
     Height="450"
     mc:Ignorable="d">
     <Window.DataContext>
-        <vm:MainViewModel />
+        <vm:PerformanceViewModel />
     </Window.DataContext>
-    <Grid>
+    <Grid Margin="10">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-            <Button
-                Margin="5"
-                Command="{Binding StartCommand}"
-                Content="Start" />
-            <Button
-                Margin="5"
-                Command="{Binding StopCommand}"
-                Content="Stop" />
+        <StackPanel Margin="0 0 0 10" Orientation="Horizontal">
+            <Button Command="{Binding LoadBadCommand}"
+            Content="暴力加载"
+            Width="150"
+            Height="35"
+            Background="LightCoral"/>
+            <Button Command="{Binding LoadGoodCommand}"
+            Content="平滑加载"
+            Width="150"
+            Height="35"
+            Background="LightGreen"/>
+            <Button Command="{Binding ClearCommand}"
+            Content="清理数据"
+            Width="150"
+            Height="35"/>
         </StackPanel>
-        <ListBox
-            Grid.Row="1"
-            behavior:AutoScrollBehavior.Enable="True"
-            ItemsSource="{Binding Logs}"
-            ScrollViewer.CanContentScroll="True"
-            VirtualizingPanel.IsVirtualizing="True"
-            VirtualizingPanel.VirtualizationMode="Recycling">
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <VirtualizingStackPanel />
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
-
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock FontFamily="Consolas" Text="{Binding Message}" />
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+        <TextBlock Grid.Row="1"
+        FontSize="16"
+        FontWeight="Bold"
+                   Foreground="Blue"
+                   Margin="0 0 0 10"
+                   Text="{Binding StatusText}"/>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <GroupBox 
+                Margin="0 0 5 0"
+                Foreground="Red"
+                Header="未使用虚拟化（滚动会极为卡顿）">
+                <ScrollViewer>
+                    <ItemsControl ItemsSource="{Binding Logs}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border 
+                            Padding="5"
+                            Background="{Binding BackgroundBrush}"
+                            BorderBrush="Gray"
+                            BorderThickness="0 0 0 1"
+>
+                                    <TextBlock Text="{Binding Message}"/>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </GroupBox>
+            <GroupBox 
+                Grid.Column="1"
+                Margin="5 0 0 0"
+                Foreground="Green"
+                Header="已开启 UI 虚拟化（丝滑滚动）">
+                <ListBox
+                    behavior:AutoScrollBehavior.Enable="True"
+                    ItemsSource="{Binding GoodLogs}"
+                    ScrollViewer.CanContentScroll="True"
+                    VirtualizingPanel.IsVirtualizing="True"
+                    VirtualizingPanel.VirtualizationMode="Recycling">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="OverridesDefaultStyle" Value="True"/>
+                            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border x:Name="LogBorder"
+                                        Padding="0 2"
+                                        Background="Transparent">
+                                            <ContentPresenter/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="LogBorder" Property="Background" Value="#E5F3FF"/>
+                                            </Trigger>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="LogBorder" Property="Background" Value="#CCE8FF"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Border
+                                Padding="5"
+                                Background="{Binding BackgroundBrush}">
+                                <TextBlock Text="{Binding Message}"/>
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </GroupBox>
+        </Grid>
     </Grid>
 </Window>
